@@ -40,7 +40,7 @@ socket.on("chat message", (msg) => {
     const newMessageDiv = document.createElement("div");
     newMessageDiv.className = "message received";
 
-    // Replace certain words with emojis
+    
     const emojis = {
         "react": "⚛️",
         "woah": "😲",
@@ -80,7 +80,7 @@ socket.emit("user joined", username);
 
 socket.on("update userlist", (users) => {
     const contactsList = document.querySelector(".contact-list");
-    contactsList.innerHTML = ""; // Clear the list first
+    contactsList.innerHTML = ""; 
 
     users.forEach((user) => {
         const contactItem = document.createElement("li");
@@ -105,12 +105,12 @@ document.getElementById("messageInput").addEventListener("keyup", (event) => {
 const appendChatMessage = (messageNode) => {
     const messagesDiv = document.querySelector(".messages");
     messagesDiv.appendChild(messageNode);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom to see the latest message
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; 
 };
 
 socket.on("chat message", (msg) => {
     const newMessageDiv = document.createElement("div");
-    newMessageDiv.className = "message received"; // You might want to differentiate between sent and received messages.
+    newMessageDiv.className = "message received"; 
     newMessageDiv.textContent = msg;
     appendChatMessage(newMessageDiv);
 });
