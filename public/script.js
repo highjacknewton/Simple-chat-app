@@ -35,29 +35,33 @@ const handleSlashCommand = (message) => {
 
 };
 
-const sendMessage = () => {
-    const messageInput = document.getElementById("messageInput");
-    let message = messageInput.value;
+socket.on("chat message", (msg) => {
+    const messageDiv = document.querySelector(".messages");
+    const newMessageDiv = document.createElement("div");
+    newMessageDiv.className = "message received";
 
-    const replacements = {
-        react: "⚛",
-        woah: "😮",
-        hey: "👋",
-        lol: "😂",
-        like: "❤️",
-        congratulations: "🎉",
+    // Replace certain words with emojis
+    const emojis = {
+        "react": "⚛️",
+        "woah": "😲",
+        "hey": "👋",
+        "lol": "😂",
+        "like": "🤍",
+        "congratulations": "🎉",
     };
 
-    
-    let words = message.split(" ");
-    for (let i = 0; i < words.length; i++) {
-        if (replacements[words[i]]) {
-            words[i] = replacements[words[i]];
-        }
-    }
+    const words = msg.split(" ");
+    const processedWords = words.map(word => emojis[word] || word);
+    const processedMsg = processedWords.join(" ");
 
-    message = words.join(" ");
+    newMessageDiv.textContent = processedMsg;
+    messageDiv.appendChild(newMessageDiv);
+    messageDiv.scrollTop = messageDiv.scrollHeight;
+});
 
+const sendMessage = () => {
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value;
     if (message.trim() !== "") {
         if (isSlashCommand(message)) {
             handleSlashCommand(message);
@@ -76,7 +80,7 @@ socket.emit("user joined", username);
 
 socket.on("update userlist", (users) => {
     const contactsList = document.querySelector(".contact-list");
-    contactsList.innerHTML = ""; 
+    contactsList.innerHTML = ""; // Clear the list first
 
     users.forEach((user) => {
         const contactItem = document.createElement("li");
@@ -101,11 +105,12 @@ document.getElementById("messageInput").addEventListener("keyup", (event) => {
 const appendChatMessage = (messageNode) => {
     const messagesDiv = document.querySelector(".messages");
     messagesDiv.appendChild(messageNode);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; 
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom to see the latest message
+};
 
 socket.on("chat message", (msg) => {
     const newMessageDiv = document.createElement("div");
-    newMessageDiv.className = "message received"; 
+    newMessageDiv.className = "message received"; // You might want to differentiate between sent and received messages.
     newMessageDiv.textContent = msg;
     appendChatMessage(newMessageDiv);
 });
